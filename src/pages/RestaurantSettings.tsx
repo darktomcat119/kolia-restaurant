@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Save, Loader2 } from 'lucide-react';
 import { api } from '../lib/api';
 import type { Restaurant, CuisineType } from '../lib/types';
@@ -9,6 +9,13 @@ const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'
 const DAY_LABELS: Record<string, string> = {
   monday: 'Lundi', tuesday: 'Mardi', wednesday: 'Mercredi', thursday: 'Jeudi',
   friday: 'Vendredi', saturday: 'Samedi', sunday: 'Dimanche',
+};
+const ADDRESS_DEBOUNCE_MS = 450;
+
+type AddressSuggestion = {
+  displayName: string;
+  latitude: number;
+  longitude: number;
 };
 
 export function RestaurantSettings() {
@@ -31,6 +38,10 @@ export function RestaurantSettings() {
   const [deliveryRadius, setDeliveryRadius] = useState('');
   const [pickupAvailable, setPickupAvailable] = useState(false);
   const [isActive, setIsActive] = useState(true);
+  const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
+  const [addressSearching, setAddressSearching] = useState(false);
+  const [showAddressSuggestions, setShowAddressSuggestions] = useState(false);
+  const addressDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [openingHours, setOpeningHours] = useState<
     Record<string, { open: string; close: string } | null>
   >({});
@@ -66,6 +77,52 @@ export function RestaurantSettings() {
 
     fetchRestaurant();
   }, []);
+
+  useEffect(() => {
+    const query = address.trim();
+
+    if (addressDebounceRef.current) clearTimeout(addressDebounceRef.current);
+
+    if (query.length < 3) {
+      setAddressSuggestions([]);
+      setAddressSearching(false);
+      return;
+    }
+
+    addressDebounceRef.current = setTimeout(async () => {
+      setAddressSearching(true);
+      try {
+        const params = new URLSearchParams({
+          q: query,
+          format: 'json',
+          addressdetails: '1',
+          limit: '6',
+        });
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?${params.toString()}`);
+        if (!res.ok) {
+          setAddressSuggestions([]);
+          return;
+        }
+        const data = (await res.json()) as Array<{ display_name?: string; lat?: string; lon?: string }>;
+        const suggestions = (data || [])
+          .filter((item) => item.display_name && item.lat && item.lon)
+          .map((item) => ({
+            displayName: item.display_name as string,
+            latitude: Number(item.lat),
+            longitude: Number(item.lon),
+          }));
+        setAddressSuggestions(suggestions);
+      } catch {
+        setAddressSuggestions([]);
+      } finally {
+        setAddressSearching(false);
+      }
+    }, ADDRESS_DEBOUNCE_MS);
+
+    return () => {
+      if (addressDebounceRef.current) clearTimeout(addressDebounceRef.current);
+    };
+  }, [address]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -243,13 +300,40 @@ export function RestaurantSettings() {
               <label className="block text-sm font-medium text-[#6B6560] font-body mb-1.5">
                 Adresse
               </label>
-              <input
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                required
-                className="w-full px-4 py-3 rounded-xl border border-border bg-white font-body text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/20"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={address}
+                  onChange={(e) => {
+                    setAddress(e.target.value);
+                    setShowAddressSuggestions(true);
+                  }}
+                  onFocus={() => setShowAddressSuggestions(true)}
+                  onBlur={() => setTimeout(() => setShowAddressSuggestions(false), 150)}
+                  required
+                  className="w-full px-4 py-3 rounded-xl border border-border bg-white font-body text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/20"
+                />
+                {addressSearching && (
+                  <div className="absolute right-3 top-3.5 text-xs text-[#9C9690] font-body">Recherche...</div>
+                )}
+                {showAddressSuggestions && addressSuggestions.length > 0 && (
+                  <div className="absolute z-20 mt-1 w-full max-h-56 overflow-auto rounded-xl border border-border-light bg-white shadow-lg">
+                    {addressSuggestions.map((item, index) => (
+                      <button
+                        key={`${item.latitude}-${item.longitude}-${index}`}
+                        type="button"
+                        onClick={() => {
+                          setAddress(item.displayName);
+                          setShowAddressSuggestions(false);
+                        }}
+                        className="w-full text-left px-3 py-2.5 text-sm font-body text-[#4A4642] hover:bg-[#F7F7F5] border-b last:border-b-0 border-border-light"
+                      >
+                        {item.displayName}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-[#6B6560] font-body mb-1.5">
