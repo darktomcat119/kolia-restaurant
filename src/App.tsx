@@ -4,6 +4,7 @@ import { ToastProvider } from './components/Toast';
 import { Layout } from './components/Layout';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { AuthConfirm } from './pages/AuthConfirm';
 import { RestaurantSetup } from './pages/RestaurantSetup';
 import { Dashboard } from './pages/Dashboard';
 import { RestaurantSettings } from './pages/RestaurantSettings';
@@ -102,6 +103,7 @@ function App() {
               </GuestGuard>
             }
           />
+          <Route path="/auth/confirm" element={<AuthConfirm />} />
 
           {/* Setup — requires auth but no restaurant yet */}
           <Route

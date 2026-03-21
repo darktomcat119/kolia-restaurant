@@ -2,12 +2,15 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 import { supabase } from './supabase';
 import type { Session } from '@supabase/supabase-js';
 
+export type SignUpResult = { needsConfirmation?: boolean };
+
 interface AuthContextType {
   session: Session | null;
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, fullName: string) => Promise<void>;
+  signUp: (email: string, password: string, fullName: string) => Promise<SignUpResult>;
   signOut: () => Promise<void>;
+  resendConfirmation: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -48,14 +51,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const signUp = async (email: string, password: string, fullName: string) => {
-    const { error } = await supabase.auth.signUp({
+  const signUp = async (email: string, password: string, fullName: string): Promise<SignUpResult> => {
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: { full_name: fullName, role: 'restaurant_owner' },
+        emailRedirectTo: typeof window !== 'undefined' ? `${window.location.origin}/auth/confirm` : undefined,
       },
     });
+    if (error) throw error;
+    const needsConfirmation = !data.session && data.user && !data.user.email_confirmed_at;
+    return { needsConfirmation: !!needsConfirmation };
+  };
+
+  const resendConfirmation = async (email: string) => {
+    const { error } = await supabase.auth.resend({ type: 'signup', email });
     if (error) throw error;
   };
 
@@ -65,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ session, isLoading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ session, isLoading, signIn, signUp, signOut, resendConfirmation }}>
       {children}
     </AuthContext.Provider>
   );

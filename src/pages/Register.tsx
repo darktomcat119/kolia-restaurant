@@ -11,10 +11,12 @@ export function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [needsConfirmation, setNeedsConfirmation] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
+    setNeedsConfirmation(false);
 
     if (password !== confirmPassword) {
       setError('Les mots de passe ne correspondent pas');
@@ -29,8 +31,12 @@ export function Register() {
     setLoading(true);
 
     try {
-      await signUp(email, password, fullName);
-      navigate('/setup');
+      const result = await signUp(email, password, fullName);
+      if (result?.needsConfirmation) {
+        setNeedsConfirmation(true);
+      } else {
+        navigate('/setup');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "L'inscription a échoué");
     } finally {
@@ -57,6 +63,14 @@ export function Register() {
           {error && (
             <div className="mb-4 p-3 rounded-xl bg-[#FDE8E8] text-[#DC2626] text-sm font-body">
               {error}
+            </div>
+          )}
+          {needsConfirmation && (
+            <div className="mb-4 p-4 rounded-xl bg-green-50 border border-green-100 text-sm font-body">
+              <p className="text-green-800 font-medium mb-1">Vérifiez votre boîte mail</p>
+              <p className="text-green-700">
+                Un e-mail de confirmation a été envoyé à <strong>{email}</strong>. Cliquez sur le lien pour activer votre compte, puis connectez-vous.
+              </p>
             </div>
           )}
 
