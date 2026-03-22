@@ -3,10 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, ArrowRight, ClipboardList, ChefHat, TrendingUp } from 'lucide-react';
 import { useAuth } from '../lib/auth';
 import { supabase } from '../lib/supabase';
-
-const getAuthBaseUrl = () =>
-  import.meta.env.VITE_SITE_URL ||
-  (typeof window !== 'undefined' ? window.location.origin : 'https://kolia-restaurant.vercel.app');
+import { getPasswordResetRedirectUrl } from '../lib/authRedirect';
 import { LoginCarousel } from '../components/LoginCarousel';
 
 const FLOATING_PARTICLES = [
@@ -45,7 +42,7 @@ export function Login() {
     setError('');
     try {
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${getAuthBaseUrl()}/reset-password`,
+        redirectTo: getPasswordResetRedirectUrl(),
       });
       if (resetError) throw resetError;
       setResetSent(true);
@@ -90,7 +87,7 @@ export function Login() {
   };
 
   return (
-    <div className="min-h-screen flex flex-row-reverse bg-[#FAFAF7]">
+    <div className="flex min-h-[100dvh] flex-row-reverse bg-[#FAFAF7]">
       {/* Right panel — cinematic hero (green tones) */}
       <div className="hidden lg:flex lg:w-[55%] relative overflow-hidden rounded-l-[2.5rem]">
         {/* Cinematic background carousel */}
@@ -175,7 +172,7 @@ export function Login() {
       </div>
 
       {/* Left panel — form */}
-      <div className="flex-1 flex items-center justify-center p-8 bg-[#FAFAF7] relative overflow-hidden">
+      <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-[#FAFAF7] px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1.5rem,env(safe-area-inset-top))] sm:p-8">
         {/* Decorative circles */}
         <div className="absolute -top-32 -left-32 w-64 h-64 rounded-full bg-secondary/[0.03]" />
         <div className="absolute -bottom-20 -right-20 w-40 h-40 rounded-full bg-emerald-400/[0.04]" />

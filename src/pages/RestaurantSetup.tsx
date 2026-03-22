@@ -113,7 +113,7 @@ export function RestaurantSetup() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAF7] flex items-center justify-center p-4">
+    <div className="flex min-h-[100dvh] items-center justify-center bg-[#FAFAF7] px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]">
       <div className="w-full max-w-lg">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -126,7 +126,7 @@ export function RestaurantSetup() {
         {/* Form */}
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-2xl p-8 shadow-sm border border-border-light"
+          className="rounded-2xl border border-border-light bg-white p-6 shadow-sm sm:p-8"
         >
           <h2 className="text-xl font-semibold font-body mb-2">
             Créer votre restaurant
@@ -187,7 +187,7 @@ export function RestaurantSetup() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label className="block text-sm font-medium text-[#6B6560] font-body mb-1.5">
                   Adresse *

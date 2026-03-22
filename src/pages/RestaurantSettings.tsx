@@ -197,11 +197,11 @@ export function RestaurantSettings() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-semibold font-body">Paramètres du restaurant</h1>
+      <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="font-body text-xl font-semibold sm:text-2xl">Paramètres du restaurant</h1>
         <div className="flex items-center gap-3">
           <span
-            className={`inline-flex px-3 py-1 rounded-full text-xs font-medium font-body ${
+            className={`inline-flex rounded-full px-3 py-1.5 font-body text-xs font-medium ${
               isActive ? 'bg-[#E8F9EE] text-[#16A34A]' : 'bg-[#FDE8E8] text-[#DC2626]'
             }`}
           >
@@ -214,8 +214,8 @@ export function RestaurantSettings() {
         {/* Two-column top section */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
         {/* Basic Info */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-border-light">
-          <h2 className="text-base font-semibold font-body mb-4">Informations générales</h2>
+        <div className="rounded-2xl border border-border-light bg-white p-4 shadow-sm sm:p-6">
+          <h2 className="mb-4 font-body text-base font-semibold">Informations générales</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-[#6B6560] font-body mb-1.5">
@@ -260,8 +260,8 @@ export function RestaurantSettings() {
         </div>
 
         {/* Images (read-only — managed in admin) */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-border-light">
-          <h2 className="text-base font-semibold font-body mb-1">Images</h2>
+        <div className="rounded-2xl border border-border-light bg-white p-4 shadow-sm sm:p-6">
+          <h2 className="mb-1 font-body text-base font-semibold">Images</h2>
           <p className="text-xs text-[#9C9690] font-body mb-4">Image de couverture, logo et galerie sont gérés dans l’interface d’administration.</p>
           <div className="flex flex-wrap items-start gap-4">
             {restaurant.image_url && (
@@ -293,8 +293,8 @@ export function RestaurantSettings() {
         </div>
 
         {/* Location */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-border-light">
-          <h2 className="text-base font-semibold font-body mb-4">Adresse & Contact</h2>
+        <div className="rounded-2xl border border-border-light bg-white p-4 shadow-sm sm:p-6">
+          <h2 className="mb-4 font-body text-base font-semibold">Adresse & Contact</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-[#6B6560] font-body mb-1.5">
@@ -365,9 +365,9 @@ export function RestaurantSettings() {
         </div>{/* end xl:grid-cols-2 */}
 
         {/* Delivery */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-border-light">
-          <h2 className="text-base font-semibold font-body mb-4">Paramètres de livraison</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="rounded-2xl border border-border-light bg-white p-4 shadow-sm sm:p-6">
+          <h2 className="mb-4 font-body text-base font-semibold">Paramètres de livraison</h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div>
               <label className="block text-sm font-medium text-[#6B6560] font-body mb-1.5">
                 Frais de livraison (€)
@@ -431,8 +431,8 @@ export function RestaurantSettings() {
                 className="w-full px-4 py-3 rounded-xl border border-border bg-white font-body text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/20"
               />
             </div>
-            <div className="flex items-center gap-3 pt-6">
-              <label className="relative inline-flex items-center cursor-pointer">
+            <div className="flex items-center gap-3 pt-2 sm:col-span-2 lg:col-span-3 sm:pt-6">
+              <label className="relative inline-flex min-h-[44px] cursor-pointer items-center">
                 <input
                   type="checkbox"
                   checked={pickupAvailable}
@@ -447,15 +447,15 @@ export function RestaurantSettings() {
         </div>
 
         {/* Active toggle */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-border-light">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-base font-semibold font-body">Statut du restaurant</h2>
-              <p className="text-sm text-[#6B6560] font-body mt-1">
+        <div className="rounded-2xl border border-border-light bg-white p-4 shadow-sm sm:p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
+              <h2 className="font-body text-base font-semibold">Statut du restaurant</h2>
+              <p className="mt-1 font-body text-sm text-[#6B6560]">
                 Lorsqu'il est inactif, votre restaurant n'apparaît pas dans l'application.
               </p>
             </div>
-            <label className="relative inline-flex items-center cursor-pointer">
+            <label className="relative inline-flex min-h-[44px] shrink-0 cursor-pointer items-center self-start sm:self-center">
               <input
                 type="checkbox"
                 checked={isActive}
@@ -468,12 +468,15 @@ export function RestaurantSettings() {
         </div>
 
         {/* Opening Hours */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-border-light">
-          <h2 className="text-base font-semibold font-body mb-4">Horaires d'ouverture</h2>
+        <div className="rounded-2xl border border-border-light bg-white p-4 shadow-sm sm:p-6">
+          <h2 className="mb-4 font-body text-base font-semibold">Horaires d'ouverture</h2>
           <div className="space-y-3">
             {DAYS.map((day) => (
-              <div key={day} className="flex items-center gap-4">
-                <label className="relative inline-flex items-center cursor-pointer">
+              <div
+                key={day}
+                className="flex flex-col gap-2 rounded-xl border border-border-light/60 bg-[#FAFAF8] p-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4 sm:border-0 sm:bg-transparent sm:p-0"
+              >
+                <label className="relative inline-flex min-h-[40px] cursor-pointer items-center">
                   <input
                     type="checkbox"
                     checked={openingHours[day] !== null && openingHours[day] !== undefined}
@@ -482,9 +485,9 @@ export function RestaurantSettings() {
                   />
                   <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-secondary"></div>
                 </label>
-                <span className="w-24 text-sm font-body">{DAY_LABELS[day]}</span>
+                <span className="w-24 shrink-0 font-body text-sm font-medium">{DAY_LABELS[day]}</span>
                 {openingHours[day] ? (
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <input
                       type="time"
                       value={openingHours[day]?.open ?? '09:00'}
@@ -508,11 +511,11 @@ export function RestaurantSettings() {
         </div>
 
         {/* Save Button */}
-        <div className="flex justify-end">
+        <div className="flex justify-stretch sm:justify-end">
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-secondary text-white font-body font-semibold text-sm hover:bg-secondary/90 transition-colors disabled:opacity-50"
+            className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-secondary px-6 py-3 font-body text-sm font-semibold text-white transition-colors hover:bg-secondary/90 disabled:opacity-50 sm:min-h-0 sm:w-auto"
           >
             {saving ? (
               <Loader2 size={16} className="animate-spin" />

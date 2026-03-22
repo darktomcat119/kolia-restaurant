@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
+import type { Restaurant } from '../lib/types';
 
 export function AuthConfirm() {
   const { session, isLoading } = useAuth();
@@ -22,7 +24,14 @@ export function AuthConfirm() {
           .single();
         const isOwner = profile?.role === 'restaurant_owner';
         setStatus(isOwner ? 'success' : 'customer');
-        if (isOwner) navigate('/setup', { replace: true });
+        if (isOwner) {
+          try {
+            const restaurants = await api.get<Restaurant[]>('/api/owner/restaurant');
+            navigate(restaurants.length > 0 ? '/dashboard' : '/setup', { replace: true });
+          } catch {
+            navigate('/setup', { replace: true });
+          }
+        }
       } else if (!isLoading) {
         setStatus('error');
       }
@@ -38,10 +47,17 @@ export function AuthConfirm() {
         .select('role')
         .eq('id', session.user.id)
         .single()
-        .then(({ data }) => {
+        .then(async ({ data }) => {
           const isOwner = data?.role === 'restaurant_owner';
           setStatus(isOwner ? 'success' : 'customer');
-          if (isOwner) navigate('/setup', { replace: true });
+          if (isOwner) {
+            try {
+              const restaurants = await api.get<Restaurant[]>('/api/owner/restaurant');
+              navigate(restaurants.length > 0 ? '/dashboard' : '/setup', { replace: true });
+            } catch {
+              navigate('/setup', { replace: true });
+            }
+          }
         });
     }
   }, [session, status, navigate]);
@@ -59,12 +75,12 @@ export function AuthConfirm() {
           <p className="text-[#6B6560] font-body text-sm mb-6">
             Vous pouvez fermer cette page et vous connecter à l&apos;application Kolia.
           </p>
-          <a
-            href="/login"
+          <Link
+            to="/login"
             className="inline-block px-6 py-3 rounded-xl bg-secondary text-white font-body font-semibold hover:bg-secondary/90 transition-colors"
           >
             Aller à la connexion
-          </a>
+          </Link>
         </div>
       </div>
     );

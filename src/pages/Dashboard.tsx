@@ -136,12 +136,15 @@ export function Dashboard() {
     <div>
       {/* Realtime notification toast */}
       {notification && (
-        <div className="fixed top-4 right-4 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl bg-gradient-to-r from-secondary to-secondary/90 text-white shadow-2xl shadow-secondary/25 font-body text-sm backdrop-blur-sm border border-white/10 animate-fade-up">
+        <div
+          className="fixed left-3 right-3 top-[max(1rem,env(safe-area-inset-top))] z-50 flex items-center gap-3 rounded-2xl border border-white/10 bg-gradient-to-r from-secondary to-secondary/90 px-4 py-3 font-body text-sm text-white shadow-2xl shadow-secondary/25 backdrop-blur-sm animate-fade-up sm:left-auto sm:right-4 sm:max-w-md"
+        >
           <div className="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center">
             <Bell size={14} />
           </div>
           {notification}
           <button
+            type="button"
             onClick={() => setNotification(null)}
             className="ml-2 text-white/60 hover:text-white transition-colors duration-200 hover:scale-110"
           >
@@ -158,7 +161,7 @@ export function Dashboard() {
       />
 
       {/* Stats — staggered fade-up */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <div className="mb-8 grid grid-cols-1 gap-4 sm:mb-10 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
         <div className="animate-fade-up-1">
           <StatsCard
             icon={<Package size={21} />}
@@ -196,17 +199,17 @@ export function Dashboard() {
       {/* Orders */}
       <div className="bg-white rounded-2xl shadow-sm border border-[#F0EDE8] animate-fade-up overflow-hidden" style={{ animationDelay: '0.5s' }}>
         {/* Table header */}
-        <div className="px-7 py-5 border-b border-[#F0EDE8] flex items-center justify-between bg-gradient-to-r from-white to-[#FDFCFB]">
-          <div>
-            <h2 className="text-lg font-semibold font-body text-[#1A1A1A] tracking-tight">Commandes</h2>
-            <p className="text-xs text-[#9C9690] font-body mt-0.5">
+        <div className="flex flex-col gap-3 border-b border-[#F0EDE8] bg-gradient-to-r from-white to-[#FDFCFB] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-7 sm:py-5">
+          <div className="min-w-0">
+            <h2 className="font-body text-base font-semibold tracking-tight text-[#1A1A1A] sm:text-lg">Commandes</h2>
+            <p className="mt-0.5 font-body text-xs text-[#9C9690]">
               {orders.length} commande{orders.length !== 1 ? 's' : ''} au total
             </p>
           </div>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2.5 rounded-xl border border-[#E8E4DF] bg-white font-body text-sm text-[#4A4540] focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/10 transition-all duration-200 cursor-pointer hover:border-[#D0CBC5]"
+            className="min-h-[44px] w-full cursor-pointer rounded-xl border border-[#E8E4DF] bg-white px-4 py-2.5 font-body text-sm text-[#4A4540] transition-all duration-200 hover:border-[#D0CBC5] focus:border-secondary focus:outline-none focus:ring-2 focus:ring-secondary/10 sm:min-h-0 sm:w-auto"
           >
             {STATUS_FILTERS.map((f) => (
               <option key={f.value} value={f.value}>
@@ -217,7 +220,7 @@ export function Dashboard() {
         </div>
 
         {orders.length === 0 ? (
-          <div className="p-20 text-center">
+          <div className="px-4 py-12 text-center sm:p-20">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#F5F3F0] to-[#EBE8E4] flex items-center justify-center mx-auto mb-4 shadow-sm">
               <Package size={24} className="text-[#C4C0BB]" />
             </div>
@@ -225,29 +228,29 @@ export function Dashboard() {
             <p className="text-[#B0AAA4] font-body text-xs mt-1">Les nouvelles commandes apparaitront ici</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
+          <div className="-mx-1 overflow-x-auto overscroll-x-contain px-1 sm:mx-0 sm:px-0">
+            <table className="w-full min-w-[720px]">
               <thead>
                 <tr className="border-b border-[#F0EDE8] bg-gradient-to-r from-[#FAFAF7] to-[#F8F7F4]">
-                  <th className="text-left px-7 py-4 text-[11px] font-semibold text-[#9C9690] font-body uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left font-body text-[10px] font-semibold uppercase tracking-wider text-[#9C9690] sm:px-7 sm:py-4 sm:text-[11px]">
                     N° commande
                   </th>
-                  <th className="text-left px-5 py-4 text-[11px] font-semibold text-[#9C9690] font-body uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left font-body text-[10px] font-semibold uppercase tracking-wider text-[#9C9690] sm:px-5 sm:py-4 sm:text-[11px]">
                     Client
                   </th>
-                  <th className="text-left px-5 py-4 text-[11px] font-semibold text-[#9C9690] font-body uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left font-body text-[10px] font-semibold uppercase tracking-wider text-[#9C9690] sm:px-5 sm:py-4 sm:text-[11px]">
                     Articles
                   </th>
-                  <th className="text-left px-5 py-4 text-[11px] font-semibold text-[#9C9690] font-body uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left font-body text-[10px] font-semibold uppercase tracking-wider text-[#9C9690] sm:px-5 sm:py-4 sm:text-[11px]">
                     Total
                   </th>
-                  <th className="text-left px-5 py-4 text-[11px] font-semibold text-[#9C9690] font-body uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left font-body text-[10px] font-semibold uppercase tracking-wider text-[#9C9690] sm:px-5 sm:py-4 sm:text-[11px]">
                     Statut
                   </th>
-                  <th className="text-left px-5 py-4 text-[11px] font-semibold text-[#9C9690] font-body uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left font-body text-[10px] font-semibold uppercase tracking-wider text-[#9C9690] sm:px-5 sm:py-4 sm:text-[11px]">
                     Heure
                   </th>
-                  <th className="text-left px-5 py-4 text-[11px] font-semibold text-[#9C9690] font-body uppercase tracking-wider">
+                  <th className="px-3 py-3 text-left font-body text-[10px] font-semibold uppercase tracking-wider text-[#9C9690] sm:px-5 sm:py-4 sm:text-[11px]">
                     Action
                   </th>
                 </tr>
@@ -260,18 +263,18 @@ export function Dashboard() {
                       key={order.id}
                       className="group hover:bg-gradient-to-r hover:from-[#FDFCFA] hover:to-[#FAF9F6] transition-all duration-200"
                     >
-                      <td className="px-7 py-5 text-sm font-semibold font-body text-[#1A1A1A]">
-                        <span className="bg-[#F5F3F0] px-2.5 py-1 rounded-lg text-[13px] group-hover:bg-[#EDE9E4] transition-colors duration-200">
+                      <td className="px-3 py-4 font-body text-xs font-semibold text-[#1A1A1A] sm:px-7 sm:py-5 sm:text-sm">
+                        <span className="rounded-lg bg-[#F5F3F0] px-2 py-1 text-[12px] transition-colors duration-200 group-hover:bg-[#EDE9E4] sm:px-2.5 sm:text-[13px]">
                           {order.order_number}
                         </span>
                       </td>
-                      <td className="px-5 py-5 text-sm font-body text-[#4A4540]">
+                      <td className="max-w-[140px] px-3 py-4 font-body text-xs text-[#4A4540] sm:max-w-none sm:px-5 sm:py-5 sm:text-sm">
                         <div className="font-medium">{order.profile?.full_name ?? 'Inconnu'}</div>
                         {order.profile?.phone && (
                           <div className="text-[11px] text-[#9C9690] mt-0.5">{order.profile.phone}</div>
                         )}
                       </td>
-                      <td className="px-5 py-5 text-sm font-body text-[#6B6560]">
+                      <td className="px-3 py-4 font-body text-xs text-[#6B6560] sm:px-5 sm:py-5 sm:text-sm">
                         <span className="font-medium">{order.order_items?.length ?? 0}</span> article(s)
                         {order.notes && (
                           <div className="text-[11px] text-[#B0AAA4] mt-1 italic leading-tight">
@@ -279,24 +282,25 @@ export function Dashboard() {
                           </div>
                         )}
                       </td>
-                      <td className="px-5 py-5 text-sm font-body font-bold text-[#1A1A1A] tracking-tight">
+                      <td className="whitespace-nowrap px-3 py-4 font-body text-xs font-bold tracking-tight text-[#1A1A1A] sm:px-5 sm:py-5 sm:text-sm">
                         €{Number(order.total).toFixed(2)}
                       </td>
-                      <td className="px-5 py-5">
+                      <td className="px-3 py-4 sm:px-5 sm:py-5">
                         <StatusBadge status={order.status} />
                       </td>
-                      <td className="px-5 py-5 text-sm font-body text-[#9C9690]">
+                      <td className="whitespace-nowrap px-3 py-4 font-body text-xs text-[#9C9690] sm:px-5 sm:py-5 sm:text-sm">
                         {new Date(order.created_at).toLocaleTimeString('fr-FR', {
                           hour: '2-digit',
                           minute: '2-digit',
                         })}
                       </td>
-                      <td className="px-5 py-5">
+                      <td className="px-3 py-4 sm:px-5 sm:py-5">
                         {nextStatus && (
                           <button
+                            type="button"
                             onClick={() => handleStatusUpdate(order.id, nextStatus)}
                             disabled={updatingOrder === order.id}
-                            className="px-4 py-2 rounded-xl bg-gradient-to-r from-secondary to-secondary/90 text-white text-xs font-body font-semibold hover:shadow-lg hover:shadow-secondary/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                            className="min-h-[40px] rounded-xl bg-gradient-to-r from-secondary to-secondary/90 px-3 py-2 font-body text-[11px] font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-secondary/20 active:translate-y-0 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none sm:min-h-0 sm:px-4 sm:text-xs"
                           >
                             {updatingOrder === order.id
                               ? 'Mise à jour...'

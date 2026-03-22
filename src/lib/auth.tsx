@@ -1,11 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { supabase } from './supabase';
+import { getAuthConfirmRedirectUrl } from './authRedirect';
 import type { Session } from '@supabase/supabase-js';
-
-/** Auth redirect base URL. Set VITE_SITE_URL in production (e.g. https://kolia-restaurant.vercel.app) */
-const getAuthBaseUrl = () =>
-  import.meta.env.VITE_SITE_URL ||
-  (typeof window !== 'undefined' ? window.location.origin : 'https://kolia-restaurant.vercel.app');
 
 export type SignUpResult = { needsConfirmation?: boolean };
 
@@ -57,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signUp = async (email: string, password: string, fullName: string): Promise<SignUpResult> => {
-    const redirectUrl = `${getAuthBaseUrl()}/auth/confirm`;
+    const redirectUrl = getAuthConfirmRedirectUrl();
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -72,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const resendConfirmation = async (email: string) => {
-    const redirectUrl = `${getAuthBaseUrl()}/auth/confirm`;
+    const redirectUrl = getAuthConfirmRedirectUrl();
     const { error } = await supabase.auth.resend({
       type: 'signup',
       email,

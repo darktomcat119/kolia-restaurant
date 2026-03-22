@@ -13,24 +13,26 @@ interface ConfirmModalProps {
 
 function ConfirmModal({ message, onConfirm, onCancel }: ConfirmModalProps) {
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:items-center sm:pb-4">
+      <div className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl sm:p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 rounded-full bg-[#FEF3C7] flex items-center justify-center shrink-0">
             <AlertTriangle size={20} className="text-[#D97706]" />
           </div>
           <p className="text-sm font-body text-[#1A1A1A]">{message}</p>
         </div>
-        <div className="flex gap-3 justify-end">
+        <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-3">
           <button
+            type="button"
             onClick={onCancel}
-            className="px-4 py-2 rounded-xl border border-border text-sm font-body hover:bg-surface-hover transition-colors"
+            className="min-h-[44px] rounded-xl border border-border px-4 py-2 font-body text-sm transition-colors hover:bg-surface-hover sm:min-h-0"
           >
             Annuler
           </button>
           <button
+            type="button"
             onClick={onConfirm}
-            className="px-4 py-2 rounded-xl bg-[#DC2626] text-white text-sm font-body hover:bg-[#B91C1C] transition-colors"
+            className="min-h-[44px] rounded-xl bg-[#DC2626] px-4 py-2 font-body text-sm text-white transition-colors hover:bg-[#B91C1C] sm:min-h-0"
           >
             Supprimer
           </button>
@@ -293,14 +295,14 @@ export function MenuEditor() {
         />
       )}
 
-      <h1 className="text-2xl font-semibold font-body mb-6">
+      <h1 className="mb-6 font-body text-xl font-semibold sm:text-2xl">
         Menu — {restaurant.name}
       </h1>
 
-      <div className="flex gap-6">
+      <div className="flex flex-col gap-6 lg:flex-row">
         {/* Categories Sidebar */}
-        <div className="w-64 shrink-0">
-          <div className="bg-white rounded-2xl shadow-sm border border-border-light p-4">
+        <div className="w-full shrink-0 lg:w-64">
+          <div className="rounded-2xl border border-border-light bg-white p-4 shadow-sm">
             <h3 className="text-sm font-medium text-[#6B6560] font-body mb-3">
               Catégories
             </h3>
@@ -393,33 +395,34 @@ export function MenuEditor() {
             </div>
           ) : (
             <>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold font-body">
+              <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <h2 className="font-body text-lg font-semibold">
                   {categories.find((c) => c.id === activeCategory)?.name}
                 </h2>
                 <button
+                  type="button"
                   onClick={() => {
                     setEditingItem(null);
                     setItemForm(EMPTY_ITEM);
                     setShowItemForm(true);
                   }}
-                  className="px-4 py-2 rounded-xl bg-primary text-white font-body font-medium text-sm hover:bg-primary-dark transition-colors"
+                  className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 font-body text-sm font-medium text-white transition-colors hover:bg-primary-dark sm:w-auto sm:min-h-0"
                 >
-                  <Plus size={16} className="inline -mt-0.5" /> Ajouter un plat
+                  <Plus size={16} className="-mt-0.5 inline" /> Ajouter un plat
                 </button>
               </div>
 
               {/* Item Form */}
               {showItemForm && (
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-border-light mb-6">
-                  <h3 className="text-base font-semibold font-body mb-4">
+                <div className="mb-6 rounded-2xl border border-border-light bg-white p-4 shadow-sm sm:p-6">
+                  <h3 className="mb-4 font-body text-base font-semibold">
                     {editingItem ? 'Modifier le plat' : 'Nouveau plat'}
                   </h3>
                   <form
                     onSubmit={editingItem ? handleUpdateItem : handleAddItem}
                     className="space-y-4"
                   >
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <div className="col-span-2">
                         <label className="block text-sm font-medium text-[#6B6560] font-body mb-1">
                           Nom *
@@ -503,10 +506,10 @@ export function MenuEditor() {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-3">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
                       <button
                         type="submit"
-                        className="px-6 py-2.5 rounded-xl bg-primary text-white font-body font-medium text-sm hover:bg-primary-dark transition-colors"
+                        className="min-h-[44px] rounded-xl bg-primary px-6 py-2.5 font-body text-sm font-medium text-white transition-colors hover:bg-primary-dark sm:min-h-0"
                       >
                         {editingItem ? 'Mettre à jour' : 'Ajouter'}
                       </button>
@@ -517,7 +520,7 @@ export function MenuEditor() {
                           setEditingItem(null);
                           setItemForm(EMPTY_ITEM);
                         }}
-                        className="px-6 py-2.5 rounded-xl border border-border text-sm font-body hover:bg-surface-hover transition-colors"
+                        className="min-h-[44px] rounded-xl border border-border px-6 py-2.5 font-body text-sm transition-colors hover:bg-surface-hover sm:min-h-0"
                       >
                         Annuler
                       </button>
@@ -534,8 +537,9 @@ export function MenuEditor() {
                   </p>
                 </div>
               ) : (
-                <div className="bg-white rounded-2xl shadow-sm border border-border-light overflow-hidden">
-                  <table className="w-full">
+                <div className="overflow-hidden rounded-2xl border border-border-light bg-white shadow-sm">
+                  <div className="-mx-1 overflow-x-auto overscroll-x-contain px-1 sm:mx-0 sm:px-0">
+                  <table className="w-full min-w-[560px]">
                     <thead>
                       <tr className="border-b border-border-light">
                         <th className="text-left p-4 text-sm font-medium text-[#6B6560] font-body">
@@ -620,6 +624,7 @@ export function MenuEditor() {
                       ))}
                     </tbody>
                   </table>
+                  </div>
                 </div>
               )}
             </>
