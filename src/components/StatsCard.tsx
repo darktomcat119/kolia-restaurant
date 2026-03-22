@@ -45,10 +45,10 @@ export function StatsCard({ label, value, icon, color = 'green', trend }: StatsC
   const c = COLOR_MAP[color];
   return (
     <div
-      className={`${c.bg} rounded-2xl p-6 border border-white/80 backdrop-blur-sm shadow-md ${c.glow} hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group`}
+      className={`${c.bg} group rounded-2xl border border-white/80 p-5 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg ${c.glow} sm:p-6`}
     >
-      <div className="flex items-start justify-between mb-5">
-        <div className={`w-12 h-12 rounded-xl ${c.iconBg} flex items-center justify-center ${c.iconColor} shadow-md ${c.glow} group-hover:scale-105 transition-transform duration-300`}>
+      <div className="mb-4 flex items-start justify-between sm:mb-5">
+        <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${c.iconBg} ${c.iconColor} shadow-md transition-transform duration-300 group-hover:scale-105 ${c.glow} sm:h-12 sm:w-12`}>
           {icon}
         </div>
         {trend && (
@@ -57,10 +57,10 @@ export function StatsCard({ label, value, icon, color = 'green', trend }: StatsC
           </span>
         )}
       </div>
-      <div className="text-[2rem] font-bold font-body text-[#1A1A1A] mb-1 leading-none tracking-tight">
+      <div className="mb-1 break-words font-body text-2xl font-bold leading-none tracking-tight text-[#1A1A1A] sm:text-[2rem] lg:text-[2.125rem]">
         {value}
       </div>
-      <div className="text-xs text-[#8A857F] font-body mt-2 leading-snug tracking-wide">{label}</div>
+      <div className="mt-1.5 font-body text-xs leading-snug tracking-wide text-[#8A857F] sm:mt-2">{label}</div>
     </div>
   );
 }

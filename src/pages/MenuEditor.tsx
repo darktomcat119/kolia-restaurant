@@ -388,8 +388,8 @@ export function MenuEditor() {
         {/* Items */}
         <div className="flex-1">
           {!activeCategory ? (
-            <div className="bg-white rounded-2xl p-12 text-center shadow-sm border border-border-light">
-              <p className="text-[#6B6560] font-body">
+            <div className="rounded-2xl border border-border-light bg-white px-4 py-10 text-center shadow-sm sm:p-12">
+              <p className="font-body text-[#6B6560]">
                 Créez une catégorie pour commencer à ajouter des plats
               </p>
             </div>
@@ -493,7 +493,7 @@ export function MenuEditor() {
                             key={tag}
                             type="button"
                             onClick={() => toggleDietaryTag(tag)}
-                            className={`px-3 py-1.5 rounded-full text-xs font-body transition-colors ${
+                            className={`min-h-[40px] rounded-full px-3 py-2 text-xs font-body transition-colors sm:min-h-0 sm:py-1.5 ${
                               itemForm.dietary_tags.includes(tag)
                                 ? 'bg-primary text-white'
                                 : 'bg-surface-hover text-[#6B6560] border border-border'
@@ -531,8 +531,8 @@ export function MenuEditor() {
 
               {/* Items Table */}
               {activeItems.length === 0 ? (
-                <div className="bg-white rounded-2xl p-12 text-center shadow-sm border border-border-light">
-                  <p className="text-[#6B6560] font-body">
+                <div className="rounded-2xl border border-border-light bg-white px-4 py-10 text-center shadow-sm sm:p-12">
+                  <p className="font-body text-[#6B6560]">
                     Aucun plat dans cette catégorie
                   </p>
                 </div>

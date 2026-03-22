@@ -18,8 +18,8 @@ function AuthGuard({ children }: { children: ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#FAFAF7] flex items-center justify-center">
-        <div className="w-7 h-7 border-2 border-secondary/20 border-t-secondary rounded-full animate-spin" />
+      <div className="flex min-h-[100dvh] items-center justify-center bg-[#FAFAF7] px-4 py-8 pt-[max(2rem,env(safe-area-inset-top))] pb-[max(2rem,env(safe-area-inset-bottom))]">
+        <div className="h-7 w-7 animate-spin rounded-full border-2 border-secondary/20 border-t-secondary" />
       </div>
     );
   }
@@ -34,7 +34,13 @@ function AuthGuard({ children }: { children: ReactNode }) {
 function GuestGuard({ children }: { children: ReactNode }) {
   const { session, isLoading } = useAuth();
 
-  if (isLoading) return null;
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[100dvh] items-center justify-center bg-[#FAFAF7] px-4 py-8 pt-[max(2rem,env(safe-area-inset-top))] pb-[max(2rem,env(safe-area-inset-bottom))]">
+        <div className="h-7 w-7 animate-spin rounded-full border-2 border-secondary/20 border-t-secondary" />
+      </div>
+    );
+  }
   if (session) return <Navigate to="/dashboard" replace />;
 
   return <>{children}</>;
@@ -67,8 +73,8 @@ function RestaurantGuard({ children }: { children: ReactNode }) {
 
   if (checking) {
     return (
-      <div className="min-h-screen bg-[#FAFAF7] flex items-center justify-center">
-        <div className="w-7 h-7 border-2 border-secondary/20 border-t-secondary rounded-full animate-spin" />
+      <div className="flex min-h-[100dvh] items-center justify-center bg-[#FAFAF7] px-4 py-8 pt-[max(2rem,env(safe-area-inset-top))] pb-[max(2rem,env(safe-area-inset-bottom))]">
+        <div className="h-7 w-7 animate-spin rounded-full border-2 border-secondary/20 border-t-secondary" />
       </div>
     );
   }
