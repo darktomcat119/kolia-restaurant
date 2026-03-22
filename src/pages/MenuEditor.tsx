@@ -1,5 +1,5 @@
-import { useEffect, useState, type FormEvent } from 'react';
-import { Check, Pencil, X, Plus, AlertTriangle } from 'lucide-react';
+import { useEffect, useState, useRef, type FormEvent } from 'react';
+import { Check, Pencil, X, Plus, AlertTriangle, Upload, Loader2 } from 'lucide-react';
 import { api } from '../lib/api';
 import type { Restaurant, MenuCategory, MenuItem, DietaryTag } from '../lib/types';
 import { DIETARY_LABELS } from '../lib/types';
@@ -89,6 +89,33 @@ export function MenuEditor() {
     message: string;
     onConfirm: () => void;
   } | null>(null);
+
+  const itemImageInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingItemImage, setUploadingItemImage] = useState(false);
+
+  const handleItemImageFile = async (file: File | undefined) => {
+    if (!file || !restaurant) return;
+    const okTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!okTypes.includes(file.type)) {
+      showToast('Utilisez JPEG, PNG ou WebP', 'error');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      showToast('Fichier trop volumineux (max 5 Mo)', 'error');
+      return;
+    }
+    setUploadingItemImage(true);
+    try {
+      const { url } = await api.uploadMenuItemImage(file, restaurant.id);
+      setItemForm((p) => ({ ...p, image_url: url }));
+      showToast('Image téléversée');
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Échec du téléversement', 'error');
+    } finally {
+      setUploadingItemImage(false);
+      if (itemImageInputRef.current) itemImageInputRef.current.value = '';
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -466,19 +493,66 @@ export function MenuEditor() {
                           className="w-full px-3 py-2.5 rounded-xl border border-border font-body text-sm focus:outline-none focus:border-primary"
                         />
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#6B6560] font-body mb-1">
-                          URL de l'image
+                      <div className="sm:col-span-2">
+                        <label className="mb-1 block font-body text-sm font-medium text-[#6B6560]">
+                          Photo du plat
                         </label>
-                        <input
-                          type="url"
-                          value={itemForm.image_url}
-                          onChange={(e) =>
-                            setItemForm((p) => ({ ...p, image_url: e.target.value }))
-                          }
-                          placeholder="https://..."
-                          className="w-full px-3 py-2.5 rounded-xl border border-border font-body text-sm focus:outline-none focus:border-primary"
-                        />
+                        <p className="mb-2 font-body text-xs text-[#9C9690]">
+                          Téléversez une image ou collez une URL (JPEG, PNG, WebP — max 5 Mo).
+                        </p>
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                          <div className="min-w-0 flex-1 space-y-2">
+                            <input
+                              ref={itemImageInputRef}
+                              type="file"
+                              accept="image/jpeg,image/png,image/webp"
+                              className="hidden"
+                              onChange={(e) => handleItemImageFile(e.target.files?.[0])}
+                            />
+                            <button
+                              type="button"
+                              disabled={uploadingItemImage || !restaurant}
+                              onClick={() => itemImageInputRef.current?.click()}
+                              className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-border bg-[#FAFAF7] px-4 py-2.5 font-body text-sm font-medium text-[#3D3A37] transition-colors hover:bg-surface-hover disabled:opacity-50 sm:w-auto sm:min-h-0"
+                            >
+                              {uploadingItemImage ? (
+                                <>
+                                  <Loader2 size={18} className="animate-spin" />
+                                  Téléversement…
+                                </>
+                              ) : (
+                                <>
+                                  <Upload size={18} />
+                                  Choisir une image
+                                </>
+                              )}
+                            </button>
+                            <div>
+                              <label className="mb-1 block font-body text-xs font-medium text-[#9C9690]">
+                                Ou URL de l&apos;image
+                              </label>
+                              <input
+                                type="url"
+                                value={itemForm.image_url}
+                                onChange={(e) =>
+                                  setItemForm((p) => ({ ...p, image_url: e.target.value }))
+                                }
+                                placeholder="https://..."
+                                className="w-full rounded-xl border border-border px-3 py-2.5 font-body text-sm focus:border-primary focus:outline-none"
+                              />
+                            </div>
+                          </div>
+                          {itemForm.image_url ? (
+                            <div className="shrink-0">
+                              <p className="mb-1 font-body text-xs text-[#9C9690]">Aperçu</p>
+                              <img
+                                src={itemForm.image_url}
+                                alt=""
+                                className="h-28 w-28 rounded-xl border border-border-light bg-[#F7F7F5] object-cover"
+                              />
+                            </div>
+                          ) : null}
+                        </div>
                       </div>
                     </div>
 

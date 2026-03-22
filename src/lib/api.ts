@@ -42,6 +42,20 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return json.data as T;
 }
 
+async function uploadRequest<T>(path: string, formData: FormData): Promise<T> {
+  const authHeaders = await getAuthHeaders();
+  const response = await fetch(`${API_URL}${path}`, {
+    method: 'POST',
+    headers: authHeaders,
+    body: formData,
+  });
+  const json = await response.json();
+  if (!response.ok) {
+    throw new Error(json.error || 'Upload failed');
+  }
+  return json.data as T;
+}
+
 export const api = {
   get: <T>(path: string) => request<T>(path),
   post: <T>(path: string, body: unknown) =>
@@ -50,4 +64,11 @@ export const api = {
     request<T>(path, { method: 'PATCH', body: body ? JSON.stringify(body) : undefined }),
   delete: <T>(path: string) =>
     request<T>(path, { method: 'DELETE' }),
+  /** Upload a dish image; fills `image_url` on the menu item form. */
+  uploadMenuItemImage: (file: File, restaurantId: string) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('restaurant_id', restaurantId);
+    return uploadRequest<{ url: string }>('/api/owner/upload/menu-item-image', formData);
+  },
 };
