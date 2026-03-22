@@ -497,8 +497,8 @@ export function MenuEditor() {
                     onSubmit={editingItem ? handleUpdateItem : handleAddItem}
                     className="space-y-4"
                   >
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                      <div className="col-span-2">
+                    <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2">
+                      <div className="col-span-full min-w-0">
                         <label className="block text-sm font-medium text-[#6B6560] font-body mb-1">
                           Nom *
                         </label>
@@ -512,7 +512,7 @@ export function MenuEditor() {
                           className="w-full px-3 py-2.5 rounded-xl border border-border font-body text-sm focus:outline-none focus:border-primary"
                         />
                       </div>
-                      <div className="col-span-2">
+                      <div className="col-span-full min-w-0">
                         <label className="block text-sm font-medium text-[#6B6560] font-body mb-1">
                           Description
                         </label>
@@ -525,7 +525,7 @@ export function MenuEditor() {
                           className="w-full px-3 py-2.5 rounded-xl border border-border font-body text-sm focus:outline-none focus:border-primary resize-none"
                         />
                       </div>
-                      <div>
+                      <div className="col-span-full min-w-0 sm:col-span-1">
                         <label className="block text-sm font-medium text-[#6B6560] font-body mb-1">
                           Prix (€) *
                         </label>
@@ -541,7 +541,7 @@ export function MenuEditor() {
                           className="w-full px-3 py-2.5 rounded-xl border border-border font-body text-sm focus:outline-none focus:border-primary"
                         />
                       </div>
-                      <div className="sm:col-span-2 rounded-2xl border border-border-light bg-[#FAFAF7]/80 p-4 sm:p-5">
+                      <div className="col-span-full min-w-0 rounded-2xl border border-border-light bg-[#FAFAF7]/80 p-4 sm:p-5">
                         <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
                           <div>
                             <label className="mb-0.5 block font-body text-sm font-medium text-[#6B6560]">
