@@ -49,7 +49,7 @@ export function Register() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="font-display text-4xl text-primary mb-2">Kolia</h1>
+          <img src="/images/logo.png" alt="Kolia" className="h-12 w-auto object-contain mx-auto mb-2" />
           <p className="text-[#6B6560] font-body">Inscrivez votre restaurant</p>
         </div>
 
