@@ -21,6 +21,25 @@ async function getAuthHeaders(): Promise<Record<string, string>> {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
+type ApiEnvelope = { error?: string; data?: unknown };
+
+async function readApiJson(response: Response): Promise<ApiEnvelope> {
+  const text = await response.text();
+  if (!text.trim()) {
+    if (response.status === 405) {
+      throw new Error(
+        'Réponse 405 : la requête n’atteint probablement pas l’API Railway. Dans Vercel, définissez VITE_API_URL sur l’URL du backend (https://….up.railway.app), pas sur l’URL de ce site. Puis redéployez.',
+      );
+    }
+    throw new Error(response.statusText || `Erreur ${response.status}`);
+  }
+  try {
+    return JSON.parse(text) as ApiEnvelope;
+  } catch {
+    throw new Error(`Réponse invalide (${response.status}) : ${text.slice(0, 160)}`);
+  }
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const authHeaders = await getAuthHeaders();
 
@@ -33,7 +52,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     },
   });
 
-  const json = await response.json();
+  const json = await readApiJson(response);
 
   if (!response.ok) {
     throw new Error(json.error || 'Request failed');
@@ -49,7 +68,7 @@ async function uploadRequest<T>(path: string, formData: FormData): Promise<T> {
     headers: authHeaders,
     body: formData,
   });
-  const json = await response.json();
+  const json = await readApiJson(response);
   if (!response.ok) {
     throw new Error(json.error || 'Upload failed');
   }
