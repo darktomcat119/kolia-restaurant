@@ -36,8 +36,29 @@ export function Dashboard() {
   const notifTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const restaurantIdsRef = useRef<string[]>([]);
 
-  const showNotification = (message: string) => {
+  const playNotificationSound = useCallback(() => {
+    try {
+      const ctx = new AudioContext();
+      // Two-tone chime: 880Hz then 1100Hz
+      [0, 0.2].forEach((offset, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = i === 0 ? 880 : 1100;
+        gain.gain.setValueAtTime(0.3, ctx.currentTime + offset);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + offset + 0.4);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(ctx.currentTime + offset);
+        osc.stop(ctx.currentTime + offset + 0.4);
+      });
+    } catch {
+      // Audio not available — ignore
+    }
+  }, []);
+
+  const showNotification = (message: string, sound = false) => {
     setNotification(message);
+    if (sound) playNotificationSound();
     if (notifTimeout.current) clearTimeout(notifTimeout.current);
     notifTimeout.current = setTimeout(() => setNotification(null), 5000);
   };
@@ -89,7 +110,7 @@ export function Dashboard() {
           }
 
           if (payload.eventType === 'INSERT') {
-            showNotification('Nouvelle commande reçue !');
+            showNotification('Nouvelle commande reçue !', true);
           } else if (payload.eventType === 'UPDATE') {
             const status = record.status as string | undefined;
             if (status === 'cancelled') {
